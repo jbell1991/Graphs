@@ -44,6 +44,8 @@ class Graph:
             current_node = q.dequeue()
             # if we haven't visited this node yet,
             if current_node not in visited:
+                # print current node
+                print(current_node)
                 # mark as visited
                 visited.add(current_node)
                 # get its neighbors
@@ -70,6 +72,8 @@ class Graph:
             current_node = s.pop()
             # if we haven't visited this node yet,
             if current_node not in visited:
+                # print
+                print(current_node)
                 # mark as visited
                 visited.add(current_node)
                 # get its neighbors
@@ -88,9 +92,13 @@ class Graph:
         This should be done using recursion.
         """
         if starting_vertex not in visited:
+            # mark this vertex as visited
             visited.add(starting_vertex)
+            print(starting_vertex)
             neighbors = self.get_neighbors(starting_vertex)
+            # for each neighbor 
             for neighbor in neighbors:
+                # recurse on the neighbor
                 self.dft_recursive(neighbor, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
@@ -111,6 +119,8 @@ class Graph:
             current_node = path[-1]
             # if we haven't visited this node yet,
             if current_node not in visited:
+                # print current node
+                print(current_node)
                 # mark as visited
                 visited.add(current_node)
                 # check if the node equals the target
@@ -141,6 +151,8 @@ class Graph:
             current_node = path[-1]
             # if we haven't visited this node yet,
             if current_node not in visited:
+                # print current node
+                print(current_node)
                 # mark as visited
                 visited.add(current_node)
                 # check if the node equals the target
@@ -160,16 +172,19 @@ class Graph:
 
         This should be done using recursion.
         """
+        # mark our node as visited
         visited.add(starting_vertex)
-        path += [starting_vertex]
 
-        if path[-1] == destination_vertex:
+        if starting_vertex == destination_vertex:
             return path
+
+        if len(path) == 0:
+            path.append(starting_vertex)
 
         neighbors = self.get_neighbors(starting_vertex)
         for neighbor in neighbors:
             if neighbor not in visited:
-                new_path = self.dfs_recursive(neighbor, destination_vertex, visited, path)
+                new_path = self.dfs_recursive(neighbor, destination_vertex, visited, path + [neighbor])
                 if new_path:
                     return new_path
 
