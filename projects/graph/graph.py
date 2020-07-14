@@ -13,42 +13,85 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        pass  # TODO
+        self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
         """
-        pass  # TODO
+        self.vertices[v1].add(v2)
 
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
         """
-        pass  # TODO
+        return self.vertices[vertex_id]
 
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # make a queue
+        q = Queue()
+        # enqueue our starting node
+        q.enqueue(starting_vertex)
+        # make a set to track if we've been here before
+        visited = set()
+        # while our queue isn't empty
+        while q.size() > 0:
+        # dequeue whatever is at the front of our line, this is our current node
+            current_node = q.dequeue()
+            # if we haven't visited this node yet,
+            if current_node not in visited:
+                # mark as visited
+                visited.add(current_node)
+                # get its neighbors
+                neighbors = self.get_neighbors(current_node)
+                # for each of the neighbors,
+                for neighbor in neighbors:
+                # add to the queue
+                    q.enqueue(neighbor)
 
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # make a stack
+        s = Stack()
+        # push on our starting node
+        s.push(starting_vertex)
+        # make a set to track if we've been here before
+        visited = set()
+        # while our stack isn't empty
+        while s.size() > 0:
+            # pop off whatever is on top, this is the current node
+            current_node = s.pop()
+            # if we haven't visited this node yet,
+            if current_node not in visited:
+                # mark as visited
+                visited.add(current_node)
+                # get its neighbors
+                neighbors = self.get_neighbors(current_node)
+                # for each of the neighbors
+                for neighbor in neighbors:
+                    # add to stack
+                    s.push(neighbor)
 
-    def dft_recursive(self, starting_vertex):
+
+    def dft_recursive(self, starting_vertex, visited=set()):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        pass  # TODO
+        if starting_vertex not in visited:
+            visited.add(starting_vertex)
+            neighbors = self.get_neighbors(starting_vertex)
+            for neighbor in neighbors:
+                self.dft_recursive(neighbor, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -56,17 +99,60 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
-
+        # make a queue
+        q = Queue()
+        # enqueue starting node
+        q.enqueue([starting_vertex])
+        # make a set to track if we've been here before
+        visited = set()
+        # while our queue isn't empty
+        while q.size() > 0:
+            path = q.dequeue()
+            current_node = path[-1]
+            # if we haven't visited this node yet,
+            if current_node not in visited:
+                # mark as visited
+                visited.add(current_node)
+                # check if the node equals the target
+                if current_node == destination_vertex:
+                    return path
+                neighbors = self.get_neighbors(current_node)
+                for neighbor in neighbors:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    q.enqueue(new_path)
+                
+        
     def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        # make a stack
+        s = Stack()
+        # enqueue starting node
+        s.push([starting_vertex])
+        # make a set to track if we've been here before
+        visited = set()
+        # while our queue isn't empty
+        while s.size() > 0:
+            path = s.pop()
+            current_node = path[-1]
+            # if we haven't visited this node yet,
+            if current_node not in visited:
+                # mark as visited
+                visited.add(current_node)
+                # check if the node equals the target
+                if current_node == destination_vertex:
+                    return path
+                neighbors = self.get_neighbors(current_node)
+                for neighbor in neighbors:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    s.push(new_path)
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+    def dfs_recursive(self, starting_vertex, destination_vertex, visited=set(), path=[]):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -74,7 +160,19 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        visited.add(starting_vertex)
+        path += [starting_vertex]
+
+        if path[-1] == destination_vertex:
+            return path
+
+        neighbors = self.get_neighbors(starting_vertex)
+        for neighbor in neighbors:
+            if neighbor not in visited:
+                new_path = self.dfs_recursive(neighbor, destination_vertex, visited, path)
+                if new_path:
+                    return new_path
+
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
