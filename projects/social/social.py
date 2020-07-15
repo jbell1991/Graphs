@@ -87,8 +87,15 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        paths = []
         # takes in a user_id
+        # breadth first search
+        # take the id of a specifc user
+        # get all the paths for a breadth first search
+        # update dictionary with the ids of the extended users and the
+        # shortest path from the starting id to the extended id in a list as a key
         
+
         # returns a dictionary containing every user in that user's extended
         # network along with the shortest friendship path between each
         return visited
