@@ -9,15 +9,15 @@ def earliest_ancestor(ancestors, starting_node):
     # empty path list
     paths = []
     # build graph
-    for child, parent in ancestors:
+    for parent, child in ancestors:
         # add child vertices to the graph
-        if child not in graph.vertices:
-            graph.add_vertex(child)
-        # add parent vertices to the graph
         if parent not in graph.vertices:
             graph.add_vertex(parent)
+        # add parent vertices to the graph
+        if child not in graph.vertices:
+            graph.add_vertex(child)
         # add edges to the graph to the graph
-        graph.add_edge(child, parent)
+        graph.add_edge(parent, child)
 
     # search the graph using depth first search
     for vertex in graph.vertices:
