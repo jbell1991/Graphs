@@ -1,4 +1,5 @@
 import random
+import time
 
 class Queue():
     def __init__(self):
@@ -32,12 +33,13 @@ class SocialGraph:
         Creates a bi-directional friendship
         """
         if user_id == friend_id:
-            print("WARNING: You cannot be friends with yourself")
+            return False
         elif friend_id in self.friendships[user_id] or user_id in self.friendships[friend_id]:
-            print("WARNING: Friendship already exists")
+            return False
         else:
             self.friendships[user_id].add(friend_id)
             self.friendships[friend_id].add(user_id)
+            return True
 
     def add_user(self, name):
         """
@@ -92,8 +94,29 @@ class SocialGraph:
         for friendship in random_friendships:
             self.add_friendship(friendship[0], friendship[1])
 
-    def linear_populate_graph():
-        pass
+    def linear_populate_graph(self, num_users, avg_friendships):
+        # Reset graph
+        self.last_id = 0
+        self.users = {}
+        self.friendships = {}
+        # !!!! IMPLEMENT ME
+
+        # Add users
+        # use num_users
+        for user in range(num_users):
+            self.add_user(user)
+        
+        # linear way to add the number of friendships we need?
+        target_number_friendships = num_users * avg_friendships
+        friendships_created = 0
+
+        while friendships_created < target_number_friendships:
+            friend_one = random.randint(1, self.last_id)
+            friend_two = random.randint(1, self.last_id)
+
+            friendship_was_made = self.add_friendship(friend_one, friend_two)
+            if friendship_was_made:
+                friendships_created += 2
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -151,7 +174,37 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 3)
-    print(sg.friendships)
-    connections = sg.get_all_social_paths(1)
-    print(connections)
+    num_users = 1000
+    avg_friendships = 5
+
+    start_time = time.time()
+    sg.populate_graph(num_users, avg_friendships)
+    end_time = time.time()
+
+    print(f"Populate graph O(n^2): {end_time - start_time}")
+
+    start_time = time.time()
+    sg.linear_populate_graph(num_users, avg_friendships)
+    end_time = time.time()
+
+    print(f"Populate graph linear: {end_time - start_time}")
+    
+    # connections = sg.get_all_social_paths(1)
+    # print(connections)
+
+    # percentage of total users are in our extended social network?
+
+    # how many people we know, divided by how many people there are
+
+    # print(f'{(len(connections) - 1) / 1000 * 100}%')
+
+    # what is the average degree of separation between a user and those in his/her extended network?
+
+    # average length of a path to each user
+    # traverse a user's extended connections, gather lengths, sum,
+    # total_lengths = 0
+    # for friend in connections:
+    #     total_lengths += len(connections[friend])
+    # # divide by number of friends in connected component aka extended social network
+
+    # print(f' Average degree of separation: {total_lengths / len(connections)}')
