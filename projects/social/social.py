@@ -92,6 +92,9 @@ class SocialGraph:
         for friendship in random_friendships:
             self.add_friendship(friendship[0], friendship[1])
 
+    def linear_populate_graph():
+        pass
+
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
@@ -110,8 +113,6 @@ class SocialGraph:
             current_node = path[-1]
             # if we haven't visited this node yet,
             if current_node not in visited:
-                # print current node
-                # print(current_node)
                 # mark as visited
                 visited.add(current_node)
                 # check if the node equals the target
@@ -132,10 +133,8 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
-        visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        visited = {}
         paths = []
-        test_paths = []
         # for each user in the network
         for user in self.users:
             # get the shortest path from input user to furthest extension using bfs
