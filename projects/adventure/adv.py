@@ -10,8 +10,8 @@ world = World()
 
 
 # You may uncomment the smaller graphs for development and testing purposes.
-map_file = "maps/test_line.txt"
-# map_file = "maps/test_cross.txt"
+# map_file = "maps/test_line.txt"
+map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
 # map_file = "maps/main_maze.txt"
@@ -29,29 +29,22 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n', 's', 's', 's', 's', 'n', 'n', 'w', 'w', 'e', 'e', 'e', 'e']
 traversal_path = []
 
-def build_traversal_graph():
+opposite = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
+
+def build_graph():
     graph = {}
+    visited = set()
     # build a graph by running a traversal through the map
     # until you reach every room in the map
-    
-    while len(graph) < len(room_graph):
+    while len(visited) < len(room_graph):
         # start at room 0
         current_room = player.current_room.id
-        room_exits = {direction : '?' for direction in player.current_room.get_exits()}
-        graph[current_room] = room_exits
-        # logic that looks at each direction in a room
-        # if there are no question marks (no unexplored paths) backtrack?
-        # if '?' not in graph:
-        #     # go back to where you came
-        #     direction = 
-        # # if there are question marks, pick a random one to explore
-        # else:
-            
-        # do this until there are no more question marks in the graph
-
-        # logic that chooses a direction if its a question mark
+        if current_room not in visited:
+            room_exits = {direction : '?' for direction in player.current_room.get_exits()}
+            graph[current_room] = room_exits
+            # logic that changes a question mark to pointer that points to room in that direction
+            visited.add(player.current_room.id)
         random_direction = random.choice(list(graph[player.current_room.id]))
-        # logic that changes a question mark to pointer that points to room in that direction
         # move player
         player.travel(direction=random_direction)
         # set next room equal to the new current room id 
@@ -59,26 +52,19 @@ def build_traversal_graph():
         # change direction key from '?' to pointer
         graph[current_room][random_direction] = next_room
         # append direction to path
-        traversal_path.append(random_direction)
-    # pick a randomly unexplored direction as denoted by a '?'
-    # move in that direction
-    # and add your move into the traversal_path
-    # keep doing that until there are no unexplored directions?
-    print(traversal_path)
-    print(len(graph))
+        # traversal_path.append(random_direction)
     return graph
 
-print(build_traversal_graph())
 
-# print(f'current player room id: {player.current_room.id}')
-# print(f'current room exits: {player.current_room.get_exits()}')
-# player.travel(direction='n')
-# print(f'current player room id: {player.current_room.id}')
-# print(f'current room exits: {player.current_room.get_exits()}')
-# player.travel(direction='n')
-# print(f'current player room id: {player.current_room.id}')
-# print(f'current room exits: {player.current_room.get_exits()}')
-# print(len(traversal_path), len(room_graph))
+print(build_graph())
+
+def search_graph():
+    # find the shortest path in the graph using breadth first traversal
+    # append the path to the traversal_path
+    # check if the steps are low enough to pass the tests
+    pass
+
+
 
 # TRAVERSAL TEST
 visited_rooms = set()
