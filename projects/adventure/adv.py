@@ -2,6 +2,7 @@ from room import Room
 from player import Player
 from world import World
 
+
 import random
 from ast import literal_eval
 
@@ -31,8 +32,11 @@ traversal_path = []
 
 opposite = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
 
+opposite_path = []
+
+graph = {}
+
 def build_graph():
-    graph = {}
     visited = set()
     # build a graph by running a traversal through the map
     # until you reach every room in the map
@@ -42,27 +46,62 @@ def build_graph():
         if current_room not in visited:
             room_exits = {direction : '?' for direction in player.current_room.get_exits()}
             graph[current_room] = room_exits
-            # logic that changes a question mark to pointer that points to room in that direction
             visited.add(player.current_room.id)
-        random_direction = random.choice(list(graph[player.current_room.id]))
-        # move player
-        player.travel(direction=random_direction)
-        # set next room equal to the new current room id 
-        next_room = player.current_room.id
-        # change direction key from '?' to pointer
-        graph[current_room][random_direction] = next_room
-        # append direction to path
-        # traversal_path.append(random_direction)
+        unexplored_directions = []
+        for key, value in room_exits.items():
+            if value == '?':
+                unexplored_directions.append(key)
+        print(unexplored_directions)
+        if len(unexplored_directions) >= 1:
+            random_direction = random.choice(unexplored_directions)
+            # unexplored_directions.remove(random_direction)
+            global last_direction
+            last_direction = random_direction
+            traversal_path.append(random_direction)
+            opposite_path.append(opposite[random_direction])
+
+
+            player.travel(direction=random_direction)
+            # set next room equal to the new current room id
+            next_room = player.current_room.id
+            # change direction key from '?' to pointer
+            # if '?' not in directions there an no unexplored paths so turn back the way you came
+            graph[current_room][random_direction] = next_room
+            # else change the '?' to
+            # append direction to path
+        else:
+            # random_direction = random.choice(list(graph[player.current_room.id]))
+            # traversal_path.append(random_direction)
+            # random_direction = opposite[last_direction]
+            # when i reach a dead end go back to the nearest room that does contain and unexplored path
+            # random_direction = opposite_path[-1]
+            # opposite_path.remove(random_direction)
+            # traversal_path.append(random_direction)
+            # random_direction = random.choice(list(graph[player.current_room.id]))
+            opposite_direction = opposite_path[-1]
+            opposite_path.pop()
+            # reverse directions
+            player.travel(direction=opposite_direction)
+            traversal_path.append(opposite_direction)
+
+        # print(len(unexplored_directions))
+        # print(random_direction)
+        # player.travel(direction=random_direction)
+        # # set next room equal to the new current room id 
+        # next_room = player.current_room.id
+        # # change direction key from '?' to pointer
+        # # if '?' not in directions there an no unexplored paths so turn back the way you came
+        # graph[current_room][random_direction] = next_room
+        # # else change the '?' to
+        # # append direction to path
+        print(traversal_path)
+        print(opposite_path)
+        print(graph)
     return graph
 
 
 print(build_graph())
 
-def search_graph():
-    # find the shortest path in the graph using breadth first traversal
-    # append the path to the traversal_path
-    # check if the steps are low enough to pass the tests
-    pass
 
 
 
@@ -86,12 +125,12 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
+# player.current_room.print_room_description(player)
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")
