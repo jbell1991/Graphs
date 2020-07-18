@@ -116,7 +116,7 @@ graph = {}
 def build_graph():
     visited = set()
     # repeat until the length of the visited rooms == length of the room map
-    while len(graph) < len(room_graph):
+    while len(visited) < len(room_graph):
         # start at the first room
         current_room = player.current_room.id
         # if current room is not in visited 
@@ -130,7 +130,6 @@ def build_graph():
         for key, value in graph[current_room].items():
             if value == '?':
                 unexplored_directions.append(key)
-        print(unexplored_directions)
         # if there are any unexplored directions in the current room
         if len(unexplored_directions) > 0:
             # pick a random direction to move in 
@@ -155,8 +154,6 @@ def build_graph():
                 opposite_path.pop()
                 # track the direction
                 traversal_path.append(opposite_direction)
-        print(graph)
-        print(traversal_path)
     return graph
 
 
