@@ -30,24 +30,33 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n', 's', 's', 's', 's', 'n', 'n', 'w', 'w', 'e', 'e', 'e', 'e']
 traversal_path = []
 
+# mapping of opposite directions
 opposite = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
 
+# track opposite of traversal_path
 opposite_path = []
 
+# set up graph
 graph = {}
 
+# use set to track which rooms have been visited
+visited = set()
+
 def build_graph():
-    visited = set()
     # repeat until the length of the visited rooms == length of the room map
     while len(visited) < len(room_graph):
         # start at the first room
         current_room = player.current_room.id
         # if current room is not in visited 
         if current_room not in visited:
+            # mark room exits as unexplored
             room_exits = {direction : '?' for direction in player.current_room.get_exits()}
             graph[current_room] = room_exits
             # mark that room as visited
             visited.add(player.current_room.id)
+        # mark the opposite of the previously moved direction as the last room id
+        if any(opposite_path):
+            graph[current_room][opposite_path[-1]] = prev_room
         # find unexplored directions in the current room
         unexplored_directions = []
         for key, value in graph[current_room].items():
@@ -56,25 +65,35 @@ def build_graph():
         # if there are any unexplored directions in the current room
         if len(unexplored_directions) > 0:
             # pick a random direction to move in 
-            random_direction = unexplored_directions[-1] # random.choice(unexplored_directions)
-            unexplored_directions.pop()
-            # move the player in that direction
+            random_direction = random.choice(unexplored_directions)
+            # or pick the last item from the list
+            # random_direction = unexplored_directions[-1] 
+            # keep track of previous room's id
+            prev_room = player.current_room.id
+            # move the player in the random direction
             player.travel(random_direction)
             # assign variable next_room to new room id after move
             next_room = player.current_room.id
             # set the key equal to the room in that direction
-            graph[current_room][random_direction] = next_room
+            graph[prev_room][random_direction] = next_room
             # track the direction 
             traversal_path.append(random_direction)
             # track the opposite direction
             opposite_path.append(opposite[random_direction])
-        # if there are no unexplored paths
+        # if there are no unexplored directions
         else:
             # until you reach a room where there are any unexplored paths
             if len(unexplored_directions) == 0:
                 # move in the opposite direction
                 opposite_direction = opposite_path[-1]
+                # set previous room
+                prev_room = player.current_room.id
+                # move player
                 player.travel(opposite_direction)
+                # set next room
+                next_room = player.current_room.id
+                # set the key equal to the room in that direction
+                graph[prev_room][random_direction] = next_room
                 # remove from path
                 opposite_path.pop()
                 # track the direction
